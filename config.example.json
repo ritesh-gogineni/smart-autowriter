@@ -14,10 +14,10 @@
   "niche": "general",
   "storage": {
     "backend": "local",
-    "dir": ".tiered-writer/state",
-    "page_prefix": "tw-state-"
+    "dir": ".smart-autowriter/state",
+    "page_prefix": "aw-state-"
   },
-  "run_dir": ".tiered-writer/run",
+  "run_dir": ".smart-autowriter/run",
   "publisher": {
     "type": "docx",
     "status": "draft",

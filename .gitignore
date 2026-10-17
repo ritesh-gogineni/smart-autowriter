@@ -1,5 +1,5 @@
-tiered-writer.config.json
-.tiered-writer/
+smart-autowriter.config.json
+.smart-autowriter/
 articles/
 *.env
 .env*

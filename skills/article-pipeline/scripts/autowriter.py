@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""tw.py - helper for the tiered-writer plugin. Standard library only.
+"""autowriter.py - helper for the smart-autowriter plugin. Standard library only.
 
-  tw.py setup [--topic "..."]         prepare a run folder: inputs, recent posts, caches, niche pack, mode
-  tw.py claim --candidate ID words..  register this run's topic; print what other runs claimed
-  tw.py recent [--minutes N]          posts published in the last N minutes (pre-publish duplicate check)
-  tw.py media words..                 search the pre-cleared photo index (WordPress backend only)
-  tw.py media-index                   (re)build the photo index from the WordPress media library
-  tw.py publish MANIFEST.json         publish (or update) a post from a manifest; prints a JSON result
-  tw.py finish [--candidate ID] [--post-id N] [--post-url URL]   merge caches, mark the claim published
+  autowriter.py setup [--topic "..."]         prepare a run folder: inputs, recent posts, caches, niche pack, mode
+  autowriter.py claim --candidate ID words..  register this run's topic; print what other runs claimed
+  autowriter.py recent [--minutes N]          posts published in the last N minutes (pre-publish duplicate check)
+  autowriter.py media words..                 search the pre-cleared photo index (WordPress backend only)
+  autowriter.py media-index                   (re)build the photo index from the WordPress media library
+  autowriter.py publish MANIFEST.json         publish (or update) a post from a manifest; prints a JSON result
+  autowriter.py finish [--candidate ID] [--post-id N] [--post-url URL]   merge caches, mark the claim published
 
-Config: tiered-writer.config.json in the working directory (or --config, or env TW_CONFIG).
+Config: smart-autowriter.config.json in the working directory (or --config, or env AUTOWRITER_CONFIG).
 Publishers: "docx" (Word file per article), "files" (HTML file per article) or "wordpress" (REST API).
-Secrets come only from the environment: TW_WP_USER and TW_WP_APP_PASSWORD. They never go in the config
+Secrets come only from the environment: AUTOWRITER_WP_USER and AUTOWRITER_WP_APP_PASSWORD. They never go in the config
 and the model never needs them: this script does all the publishing, and sends them only to the configured
-https site. Going live (status "publish") also needs TW_ALLOW_PUBLISH=1, set by a human, not by the model."""
+https site. Going live (status "publish") also needs AUTOWRITER_ALLOW_PUBLISH=1, set by a human, not by the model."""
 import argparse, base64, datetime as dt, html, json, os, re, shutil, sys, time, unicodedata, zipfile
 import urllib.error, urllib.parse, urllib.request
 from html.parser import HTMLParser
@@ -21,16 +21,16 @@ from html.parser import HTMLParser
 HERE = os.path.dirname(os.path.abspath(__file__))
 SKILL_DIR = os.path.dirname(HERE)
 PLUGIN_DIR = os.path.dirname(os.path.dirname(SKILL_DIR))
-UA = 'Mozilla/5.0 (tiered-writer)'
+UA = 'Mozilla/5.0 (smart-autowriter)'
 KIND_RANK = {'wikimedia_cc': 0, 'stock_free': 1, 'ai_illustration': 2}
-RUN_MARK = '.tw-run'
+RUN_MARK = '.autowriter-run'
 
 DEFAULTS = {
     'site': {'name': 'My Site', 'url': '', 'language': 'en-GB', 'audience': '', 'timezone': 'UTC'},
     'topic': {'description': '', 'audience': '', 'focus': [], 'avoid': []},
     'niche': 'general',
-    'storage': {'backend': 'local', 'dir': '.tiered-writer/state', 'page_prefix': 'tw-state-'},
-    'run_dir': '.tiered-writer/run',
+    'storage': {'backend': 'local', 'dir': '.smart-autowriter/state', 'page_prefix': 'aw-state-'},
+    'run_dir': '.smart-autowriter/run',
     'publisher': {'type': 'docx', 'status': 'draft', 'output_dir': 'articles',
                   'wordpress': {'base_url': '', 'author_id': 0, 'meta_map': {}, 'stats_endpoint': '',
                                 'always_tags': [], 'allow_create_tags': False, 'recent_tag_id': 0}},
@@ -53,7 +53,7 @@ def deep_merge(a, b):
 
 
 def load_config(path=None):
-    path = path or os.environ.get('TW_CONFIG') or 'tiered-writer.config.json'
+    path = path or os.environ.get('AUTOWRITER_CONFIG') or 'smart-autowriter.config.json'
     if not os.path.exists(path):
         return deep_merge(DEFAULTS, {})
     return deep_merge(DEFAULTS, json.load(open(path, encoding='utf8')))
@@ -61,7 +61,7 @@ def load_config(path=None):
 
 CFG = DEFAULTS
 TZ_OK = [True]
-RUN = '.tiered-writer/run'
+RUN = '.smart-autowriter/run'
 
 
 class Refused(Exception):
@@ -113,7 +113,7 @@ def wp_base():
 
 def auth_header(url):
     """Basic auth for the configured WordPress site only, never for research inputs or any other URL."""
-    u, p = os.environ.get('TW_WP_USER', ''), os.environ.get('TW_WP_APP_PASSWORD', '')
+    u, p = os.environ.get('AUTOWRITER_WP_USER', ''), os.environ.get('AUTOWRITER_WP_APP_PASSWORD', '')
     if not (u and p):
         return ''
     try:
@@ -217,24 +217,24 @@ def reset_run_dir():
     home = os.path.realpath(os.path.expanduser('~'))
     if os.path.dirname(root) == root or same_or_inside(cwd, root) or os.path.normcase(root) == os.path.normcase(home):
         print(f'FATAL: run_dir {root} is the project, home or a parent folder. Point run_dir at a dedicated '
-              'folder such as .tiered-writer/run')
+              'folder such as .smart-autowriter/run')
         sys.exit(2)
     if os.path.isdir(root) and os.listdir(root) and not os.path.exists(os.path.join(root, RUN_MARK)):
-        print(f'FATAL: run_dir {root} already has files and was not made by tiered-writer, so it will not be '
+        print(f'FATAL: run_dir {root} already has files and was not made by smart-autowriter, so it will not be '
               'emptied. Choose another run_dir or empty it yourself.')
         sys.exit(2)
     shutil.rmtree(root, ignore_errors=True)
     os.makedirs(root)
     with open(os.path.join(root, RUN_MARK), 'w', encoding='utf8') as f:
-        f.write('tiered-writer run folder: emptied at the start of every run\n')
+        f.write('smart-autowriter run folder: emptied at the start of every run\n')
 
 
 def post_status():
     s = CFG['publisher'].get('status') or 'draft'
     if s not in ('draft', 'pending', 'publish'):
         s = 'draft'
-    if s == 'publish' and os.environ.get('TW_ALLOW_PUBLISH') != '1':
-        print('note: status "publish" also needs TW_ALLOW_PUBLISH=1 in the environment; saved as draft',
+    if s == 'publish' and os.environ.get('AUTOWRITER_ALLOW_PUBLISH') != '1':
+        print('note: status "publish" also needs AUTOWRITER_ALLOW_PUBLISH=1 in the environment; saved as draft',
               file=sys.stderr)
         return 'draft'
     return s
@@ -427,8 +427,8 @@ def setup(a):
     if a.topic:
         CFG['topic']['description'] = a.topic
     if not CFG['topic']['description'].strip():
-        print('FATAL: no topic area. Set "topic.description" in tiered-writer.config.json or run: '
-              'tw.py setup --topic "<the subject area to cover>"')
+        print('FATAL: no topic area. Set "topic.description" in smart-autowriter.config.json or run: '
+              'autowriter.py setup --topic "<the subject area to cover>"')
         sys.exit(2)
     if CFG['publisher']['type'] == 'wordpress':
         try:
@@ -593,7 +593,7 @@ def media_cmd(a):
     items = json.load(open(path, encoding='utf8')).get('items', []) if os.path.exists(path) else []
     ts = [norm(t) for t in a.terms if t.strip()]
     if not ts:
-        print('usage: tw.py media <words..>')
+        print('usage: autowriter.py media <words..>')
         return
     scored = []
     for it in items:
@@ -1102,7 +1102,7 @@ if __name__ == '__main__':
     ap.add_argument('--minutes', type=int)
     a = ap.parse_intermixed_args()  # options and free words may appear in any order
     CFG = load_config(a.config)
-    RUN = os.environ.get('TW_RUN') or CFG['run_dir']
+    RUN = os.environ.get('AUTOWRITER_RUN') or CFG['run_dir']
     try:
         {'setup': setup, 'claim': claim_cmd, 'recent': recent_cmd, 'media': media_cmd, 'media-index': media_index_cmd,
          'publish': publish_cmd, 'finish': finish}[a.cmd](a)

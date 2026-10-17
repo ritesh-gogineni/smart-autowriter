@@ -10,10 +10,10 @@ Create a routine whose prompt is short, for example:
 
 Practical notes:
 - Set the routine's model to your strongest model: the skill is the editor, and the scout, writer and checker choose their own cheaper models from their agent files.
-- Cloud runs start in a **fresh sandbox**, so local cache files vanish between runs. Use `"storage": {"backend": "wordpress_pages"}`: caches, claims and the photo index then live in private WordPress pages (`tw-state-*`) and are shared by every run, including parallel ones.
-- Provide `TW_WP_USER` and `TW_WP_APP_PASSWORD` through the routine's environment or secrets mechanism, not in the prompt. To let scheduled runs go live, set `TW_ALLOW_PUBLISH=1` there too (and `"status": "publish"` in the config). Leave it out and every post stays a draft.
+- Cloud runs start in a **fresh sandbox**, so local cache files vanish between runs. Use `"storage": {"backend": "wordpress_pages"}`: caches, claims and the photo index then live in private WordPress pages (`aw-state-*`) and are shared by every run, including parallel ones.
+- Provide `AUTOWRITER_WP_USER` and `AUTOWRITER_WP_APP_PASSWORD` through the routine's environment or secrets mechanism, not in the prompt. To let scheduled runs go live, set `AUTOWRITER_ALLOW_PUBLISH=1` there too (and `"status": "publish"` in the config). Leave it out and every post stays a draft.
 - Check the routine system's minimum interval. To run more often than that, create two routines offset by half the interval; the claim registry and the pre-publish check stop them duplicating a story.
-- Add the plugin's repo as part of the routine's environment so `skills/article-pipeline/scripts/tw.py` and the niche pack are present.
+- Add the plugin's repo as part of the routine's environment so `skills/article-pipeline/scripts/autowriter.py` and the niche pack are present.
 
 ## cron or CI (your own machine)
 

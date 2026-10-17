@@ -1,6 +1,6 @@
 # Niche pack: general (topic comes from the config)
 
-This default pack works for any subject. The subject itself is set by the user in `config.json` under `topic` (description, audience, focus areas, things to avoid) or passed for one run with `tw.py setup --topic "..."`. Read the `topic` block in `RUN/config.json` before anything else: it defines what is in scope. Anything outside it is not a candidate.
+This default pack works for any subject. The subject itself is set by the user in `config.json` under `topic` (description, audience, focus areas, things to avoid) or passed for one run with `autowriter.py setup --topic "..."`. Read the `topic` block in `RUN/config.json` before anything else: it defines what is in scope. Anything outside it is not a candidate.
 
 For better results copy `niches/_template/niche.md` to `niches/<name>/niche.md`, fill it with your own evidence, and set `"niche": "<name>"` in the config. See `examples/football/niche.md` for a complete one.
 

@@ -1,6 +1,6 @@
 # Niche pack: <your niche>
 
-A niche pack tells the scout, writer and checker what is worth writing about in your subject. Copy this file to `niches/<name>/niche.md`, fill in each section, and set `"niche": "<name>"` in `tiered-writer.config.json`. Delete the guidance in italics once you have filled a section in.
+A niche pack tells the scout, writer and checker what is worth writing about in your subject. Copy this file to `niches/<name>/niche.md`, fill in each section, and set `"niche": "<name>"` in `smart-autowriter.config.json`. Delete the guidance in italics once you have filled a section in.
 
 ## What the data says
 *Your own evidence, not guesses: which formats, topics and times earn clicks on your site. Put real numbers here and say when they were measured. The scout treats this section as the tie-breaker when its own judgement disagrees. If you have no data yet, say so and list your hypotheses as hypotheses.*
