@@ -1,0 +1,41 @@
+{
+  "topic": {
+    "description": "Personal finance for UK renters: tax, benefits, deposits, bills and rights",
+    "audience": "UK adults renting privately, mostly on mobile, reading on search",
+    "focus": ["rule and deadline changes", "how-to guides", "cost-of-living comparisons"],
+    "avoid": ["investment advice", "political opinion"]
+  },
+  "site": {
+    "name": "My Site",
+    "url": "https://example.com",
+    "language": "en-GB",
+    "timezone": "Europe/London"
+  },
+  "niche": "general",
+  "storage": {
+    "backend": "local",
+    "dir": ".tiered-writer/state",
+    "page_prefix": "tw-state-"
+  },
+  "run_dir": ".tiered-writer/run",
+  "publisher": {
+    "type": "docx",
+    "status": "draft",
+    "output_dir": "articles",
+    "wordpress": {
+      "base_url": "https://example.com",
+      "author_id": 0,
+      "always_tags": ["ai-assisted"],
+      "allow_create_tags": false,
+      "meta_map": {
+        "seo_title": "_yoast_wpseo_title",
+        "seo_description": "_yoast_wpseo_metadesc"
+      },
+      "stats_endpoint": ""
+    }
+  },
+  "research": {
+    "inputs": []
+  },
+  "modes": []
+}

@@ -1,0 +1,20 @@
+{
+  "name": "tiered-writer",
+  "version": "0.2.0",
+  "description": "Newsroom and blog autowriter: give it a topic area; each run picks one story, researches it (Sonnet), writes it (Sonnet), fact-checks it (Haiku) under an Opus editor, and saves it as a Word document or a WordPress draft. Safety rules enforced in code.",
+  "author": {
+    "name": "tiered-writer contributors"
+  },
+  "homepage": "https://github.com/ritesh-gogineni/tiered-writer",
+  "repository": "https://github.com/ritesh-gogineni/tiered-writer",
+  "license": "MIT",
+  "keywords": [
+    "newsroom",
+    "blogging",
+    "journalism",
+    "wordpress",
+    "docx",
+    "agents",
+    "content"
+  ]
+}

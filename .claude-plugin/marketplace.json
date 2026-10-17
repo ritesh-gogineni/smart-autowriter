@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "tiered-writer",
+  "description": "Marketplace for the tiered-writer article pipeline plugin",
+  "owner": {
+    "name": "Ritesh Gogineni",
+    "url": "https://github.com/ritesh-gogineni"
+  },
+  "plugins": [
+    {
+      "name": "tiered-writer",
+      "description": "Newsroom and blog autowriter: topic area in, one researched, fact-checked article out per run, as a Word document or WordPress draft.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
