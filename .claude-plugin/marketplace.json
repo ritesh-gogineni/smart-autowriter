@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "smart-autowriter",
-  "description": "Marketplace for the smart-autowriter article pipeline plugin",
+  "description": "Marketplace for smart-autowriter, a newsroom and blog autowriter plugin for Claude Code",
   "owner": {
     "name": "Ritesh Gogineni",
     "url": "https://github.com/ritesh-gogineni"
@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "smart-autowriter",
-      "description": "Newsroom and blog autowriter: topic area in, one researched, fact-checked article out per run, as a Word document or WordPress draft.",
+      "description": "Give it a beat, get a fact-checked article. Opus edits, Sonnet researches and writes, and Haiku checks every claim. One story per run, delivered as a Word doc or WordPress draft.",
       "source": "./",
       "category": "productivity"
     }

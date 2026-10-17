@@ -1,7 +1,7 @@
 {
   "name": "smart-autowriter",
   "version": "0.2.0",
-  "description": "Newsroom and blog autowriter: give it a topic area; each run picks one story, researches it (Sonnet), writes it (Sonnet), fact-checks it (Haiku) under an Opus editor, and saves it as a Word document or a WordPress draft. Safety rules enforced in code.",
+  "description": "Give it a beat, get a fact-checked article. Opus edits, Sonnet researches and writes, and Haiku checks every claim. One story per run, delivered as a Word doc or WordPress draft.",
   "author": {
     "name": "smart-autowriter contributors"
   },
