@@ -1,6 +1,6 @@
 # smart-autowriter
 
-A Claude Code plugin that works as a **newsroom and blog autowriter**. You give it a broad topic area (a beat, such as "UK renters' rights and housing costs" or "Premier League football"). Each run, it finds what is happening in that area, picks the one story most worth publishing, researches it, writes it, fact-checks it and delivers it as a **Word document** or a **WordPress draft**.
+A Claude Code plugin that works as a **newsroom and blog autowriter**. You give it a broad topic area (a beat, such as "UK renters' rights and housing costs" or "consumer tech for small businesses"). Each run, it finds what is happening in that area, picks the one story most worth publishing, researches it, writes it, fact-checks it and delivers it as a **Word document** or a **WordPress draft**.
 
 It is a **multi-model pipeline**: the strongest model decides, cheaper models do the work.
 
@@ -32,7 +32,7 @@ Requires Python 3.8+ (standard library only) and a Claude Code session that can 
 ## Quickstart (5 minutes, no WordPress needed)
 
 1. Copy `config.example.json` to `smart-autowriter.config.json` in your project. Edit `topic`: the broad area you cover (`description`), who reads it, what to focus on and what to avoid. Then edit `site`. Leave `publisher.type` as `docx`: each article is saved as a Word document in `./articles/`.
-2. The default `"niche": "general"` pack works for any topic area. For better results copy `niches/_template/niche.md` to `niches/<yourname>/niche.md`, fill it in with your own evidence, and set `"niche": "<yourname>"`. `examples/football/niche.md` is a fully worked example.
+2. The default `"niche": "general"` pack works for any topic area. For better results copy `niches/_template/niche.md` to `niches/<yourname>/niche.md`, fill it in with your own evidence, and set `"niche": "<yourname>"`. `examples/uk-renters/niche.md` is a fully worked example.
 3. In Claude Code, on your strongest model, run `/smart-autowriter:article-pipeline` (plugin skills are namespaced), or ask in plain words: *"Run the article-pipeline skill once on home composting."* (this overrides the configured topic area for one run). Each run picks one story in the area and writes one article.
 4. Open `./articles/<slug>.docx` and read the run report.
 
@@ -73,7 +73,7 @@ Details are in `skills/article-pipeline/SKILL.md`; the three agents are in `agen
 
 ## Make it yours
 
-The pipeline is generic and you set the topic; a **niche pack** holds everything specific to your subject: what formats win, which sources to trust, what counts as volatile, key dates, timing, banned words. `examples/football/niche.md` is a complete example; `niches/_template/niche.md` is the blank form. Fill the "What the data says" section with your own analytics: it is the single biggest lever on quality.
+The pipeline is generic and you set the topic; a **niche pack** holds everything specific to your subject: what formats win, which sources to trust, what counts as volatile, key dates, timing, banned words. `examples/uk-renters/niche.md` is a complete example; `niches/_template/niche.md` is the blank form. Fill the "What the data says" section with your own analytics: it is the single biggest lever on quality.
 
 ## Results
 
