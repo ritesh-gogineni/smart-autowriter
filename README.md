@@ -19,7 +19,6 @@ Around that sit the parts that make it safe to run on a schedule:
 - **Safety enforced in code, not just in the prompt**: a helper script does all publishing. It strips scripts and unsafe HTML, publishes only files from the run folder, sends credentials only to your https site, and updates only posts the pipeline wrote. See [Security](#security).
 - **Draft by default**: nothing goes live unless you set the status to `publish` *and* set `AUTOWRITER_ALLOW_PUBLISH=1` yourself.
 
-> **Status: experimental.** This pipeline was extracted from a live football site. See [Results](#results) for what is and is not measured. Read [Responsible use](#responsible-use) before turning on auto-publishing.
 
 ## Install
 
